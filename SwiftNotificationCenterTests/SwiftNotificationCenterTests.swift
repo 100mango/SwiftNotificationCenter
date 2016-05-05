@@ -21,16 +21,23 @@ class SwiftNotificationCenterTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
+    func testNotify() {
+        let object = MockClass()
+        NotificationCenter.register(MockProtocol.self, observer: object)
+        NotificationCenter.notify(MockProtocol.self) { observer in
+            let string = observer.hello()
+            XCTAssert(string == "hello")
         }
     }
     
+}
+
+protocol MockProtocol {
+    func hello() -> String
+}
+
+class MockClass: MockProtocol {
+    func hello() -> String {
+        return "hello"
+    }
 }
