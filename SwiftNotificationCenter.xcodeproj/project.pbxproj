@@ -11,6 +11,7 @@
 		DB7989961CDB2C8A00419114 /* SwiftNotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB79898B1CDB2C8A00419114 /* SwiftNotificationCenter.framework */; };
 		DB79899B1CDB2C8A00419114 /* SwiftNotificationCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB79899A1CDB2C8A00419114 /* SwiftNotificationCenterTests.swift */; };
 		DB7989A61CDB304C00419114 /* WeakObjectSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7989A51CDB304C00419114 /* WeakObjectSet.swift */; };
+		DB7989A81CDB30D700419114 /* SwiftNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7989A71CDB30D700419114 /* SwiftNotificationCenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +32,7 @@
 		DB79899A1CDB2C8A00419114 /* SwiftNotificationCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftNotificationCenterTests.swift; sourceTree = "<group>"; };
 		DB79899C1CDB2C8A00419114 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DB7989A51CDB304C00419114 /* WeakObjectSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeakObjectSet.swift; sourceTree = "<group>"; };
+		DB7989A71CDB30D700419114 /* SwiftNotificationCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftNotificationCenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +78,7 @@
 				DB79898E1CDB2C8A00419114 /* SwiftNotificationCenter.h */,
 				DB7989901CDB2C8A00419114 /* Info.plist */,
 				DB7989A51CDB304C00419114 /* WeakObjectSet.swift */,
+				DB7989A71CDB30D700419114 /* SwiftNotificationCenter.swift */,
 			);
 			path = SwiftNotificationCenter;
 			sourceTree = "<group>";
@@ -198,6 +201,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB7989A61CDB304C00419114 /* WeakObjectSet.swift in Sources */,
+				DB7989A81CDB30D700419114 /* SwiftNotificationCenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
