@@ -1,0 +1,10 @@
+PODS:
+  - SwiftNotificationCenter (1.0.0)
+
+DEPENDENCIES:
+  - SwiftNotificationCenter
+
+SPEC CHECKSUMS:
+  SwiftNotificationCenter: 1216530054e23f8b50d45a09a699875fefc01cd9
+
+COCOAPODS: 0.39.0
