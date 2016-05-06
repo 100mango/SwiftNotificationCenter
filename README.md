@@ -1,5 +1,8 @@
 # SwiftNotificationCenter
 
+[![](http://img.shields.io/badge/iOS-8.0%2B-blue.svg)]() [![](http://img.shields.io/badge/Swift-2.2-blue.svg)]()
+
+
 A Protocol-Oriented NotificationCenter which is type safe, thread safe and with memory safety.
 
 - Type Safe
@@ -14,7 +17,7 @@ A Protocol-Oriented NotificationCenter which is type safe, thread safe and with 
 
 	 SwiftNotificationCenter store the observer as a zeroing-weak reference. No crash and no need to `unregister` manually.
 		
-It's simple, safe, lghtweight and easy to use for `one-to-many` communication.
+It's simple, safe, lightweight and easy to use for `one-to-many` communication.
 
 
 ##Usage
