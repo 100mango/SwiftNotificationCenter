@@ -14,7 +14,7 @@ A Protocol-Oriented NotificationCenter which is type safe, thread safe and with 
 
 	 SwiftNotificationCenter store the observer as a zeroing-weak reference. No crash and no need to `unregister` manually.
 		
-It's simple, lghtweight and easy to use.
+It's simple, safe, lghtweight and easy to use for `one-to-many` communication.
 
 
 ##Usage
@@ -65,3 +65,8 @@ pod 'SwiftNotificationCenter'
 Manually: 
 
 Just copy source files in the SwiftNotificationCenter folder into your project.
+
+
+## License
+
+`SwiftNotificationCenter` is under the MIT license.
