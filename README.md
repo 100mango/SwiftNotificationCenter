@@ -1,9 +1,9 @@
 
-<p align="center"> <img src="logo.png" width = "120" height = "120" />
-<h1 align="center"> SwiftNotificationCenter</h1>
+<p align="center"> <img src="logo.png" />
 <br>
 
 [![](http://img.shields.io/badge/iOS-8.0%2B-blue.svg)]() [![](http://img.shields.io/badge/Swift-2.2-blue.svg)]()
+
 
 
 A Protocol-Oriented NotificationCenter which is type safe, thread safe and with memory safety.
