@@ -71,12 +71,12 @@ func handleKeyboardNotification(notification: NSNotification) {
     guard notification.name == UIKeyboardWillShowNotification 
         else { return }
 
-    guard let beginFrame = notification
-        .userInfo?[UIKeyboardFrameBeginUserInfoKey] as? CGRect
+  	guard let beginFrame = (notification
+        .userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
         else { return }
-
-    guard let endFrame = notification
-        .userInfo?[UIKeyboardFrameEndUserInfoKey] as? CGRect
+    
+    guard let endFrame = (notification
+        .userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue()
         else { return }
     // use beginFrame, endFrame
 }
@@ -87,7 +87,8 @@ func handleKeyboardNotification(notification: NSNotification) {
 ~~~swift
 /*
 If you want to observe the system built in notifications like this.
-You can declare a protocol and the relevant method, and use a singleton as the mediator to observe system's notification, then notify our observers.
+You can declare a protocol and the relevant method, and use a singleton as a mediator to observe system's notification, then notify our observers.
+Please check the refactor example in SwiftNotificationCenterExample.
 */
 func UIKeyboardWillShow(beginFrame: CGRect, endFrame: CGRect) {
 }

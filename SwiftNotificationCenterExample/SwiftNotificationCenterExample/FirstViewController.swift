@@ -18,6 +18,7 @@ class FirstViewController: UIViewController, UpdateTitle {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.register(UpdateTitle.self, observer: self)
+        NotificationCenter.register(UIKeyboardManage.self, observer: self)
     }
 
     func updateWithNewTitle(title: String) {
@@ -31,4 +32,11 @@ class FirstViewController: UIViewController, UpdateTitle {
         }
     }
     
+}
+
+extension FirstViewController: UIKeyboardManage {
+    func UIKeyboardWillShow(beginFrame: CGRect, endFrame: CGRect) {
+        print("beginFrame:\(beginFrame)")
+        print("endFrame:\(endFrame)")
+    }
 }
