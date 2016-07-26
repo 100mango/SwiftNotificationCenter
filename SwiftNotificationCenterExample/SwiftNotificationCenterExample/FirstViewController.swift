@@ -17,16 +17,16 @@ class FirstViewController: UIViewController, UpdateTitle {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.register(UpdateTitle.self, observer: self)
-        NotificationCenter.register(UIKeyboardManage.self, observer: self)
+        NotifyCenter.register(UpdateTitle.self, for: self)
+        NotifyCenter.register(UIKeyboardManage.self, for: self)
     }
 
-    func updateWithNewTitle(title: String) {
+    func updateWithNewTitle(_ title: String) {
         titleLabel.text = title
     }
     
-    @IBAction func updateTitle(sender: UIButton) {
-        NotificationCenter.notify(UpdateTitle.self) {
+    @IBAction func updateTitle(_ sender: UIButton) {
+        NotifyCenter.notify(UpdateTitle.self) {
             $0.updateWithNewTitle(self.textField.text ?? "")
             
         }
@@ -35,7 +35,7 @@ class FirstViewController: UIViewController, UpdateTitle {
 }
 
 extension FirstViewController: UIKeyboardManage {
-    func UIKeyboardWillShow(beginFrame: CGRect, endFrame: CGRect) {
+    func UIKeyboardWillShow(_ beginFrame: CGRect, endFrame: CGRect) {
         print("beginFrame:\(beginFrame)")
         print("endFrame:\(endFrame)")
     }
