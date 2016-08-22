@@ -16,20 +16,13 @@ public class NotificationCenter {
 
     
     public static func register<T>(_ protocolType: T.Type, observer: T) {
-        
-        guard let object = observer as? AnyObject else {
-            fatalError("expecting reference type but found value type: \(observer)")
-        }
-        
         let key = "\(protocolType)"
-        safeSet(key: key, object: object)
+        safeSet(key: key, object: observer as AnyObject)
     }
     
     public static func unregister<T>(_ protocolType: T.Type, observer: T) {
-        if let object = observer as? AnyObject {
-            let key = "\(protocolType)"
-            safeRemove(key: key, object: object)
-        }
+        let key = "\(protocolType)"
+        safeRemove(key: key, object: observer as AnyObject)
     }
     
     public static func notify<T>(_ protocolType: T.Type, block: (T) -> Void ) {
@@ -55,7 +48,7 @@ private extension NotificationCenter {
                 set.add(object)
                 observersDic[key] = set
             }else{
-                observersDic[key] = WeakObjectSet([object])
+                observersDic[key] = WeakObjectSet(object)
             }
         }
     }

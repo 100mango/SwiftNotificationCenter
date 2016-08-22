@@ -32,6 +32,10 @@ struct WeakObjectSet<T: AnyObject>: Sequence {
         self.objects = Set<WeakObject<T>>([])
     }
     
+    init(_ object: T) {
+        self.objects = Set<WeakObject<T>>([WeakObject(object)])
+    }
+    
     init(_ objects: [T]) {
         self.objects = Set<WeakObject<T>>(objects.map { WeakObject($0) })
     }
@@ -49,7 +53,7 @@ struct WeakObjectSet<T: AnyObject>: Sequence {
     }
     
     mutating func add(_ objects: [T]) {
-        self.objects.union(objects.map{WeakObject($0)})
+        self.objects.formUnion(objects.map{WeakObject($0)})
     }
     
     mutating func remove(_ object: T) {
