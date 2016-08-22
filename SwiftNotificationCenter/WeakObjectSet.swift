@@ -24,8 +24,7 @@ func == <T> (lhs: WeakObject<T>, rhs: WeakObject<T>) -> Bool {
     return lhs.object === rhs.object
 }
 
-
-struct WeakObjectSet<T: AnyObject>: SequenceType {
+struct WeakObjectSet<T: AnyObject>: Sequence {
     
     var objects: Set<WeakObject<T>>
     
@@ -41,32 +40,32 @@ struct WeakObjectSet<T: AnyObject>: SequenceType {
         return objects.flatMap { $0.object }
     }
     
-    func contains(object: T) -> Bool {
+    func contains(_ object: T) -> Bool {
         return self.objects.contains(WeakObject(object))
     }
     
-    mutating func addObject(object: T) {
-        self.objects.unionInPlace([WeakObject(object)])
+    mutating func add(_ object: T) {
+        self.objects.formUnion([WeakObject(object)])
     }
     
-    mutating func addObjects(objects: [T]) {
-        self.objects.unionInPlace(objects.map { WeakObject($0) })
+    mutating func add(_ objects: [T]) {
+        self.objects.union(objects.map{WeakObject($0)})
     }
     
-    mutating func removeObject(object: T) {
+    mutating func remove(_ object: T) {
         self.objects.remove(WeakObject<T>(object))
     }
     
-    mutating func removeObjects(objects: [T]) {
+    mutating func remove(_ objects: [T]) {
         for object in objects {
             self.objects.remove(WeakObject<T>(object))
         }
     }
     
-    func generate() -> AnyGenerator<T> {
+    func makeIterator() -> AnyIterator<T> {
         let objects = self.allObjects
         var index = 0
-        return AnyGenerator {
+        return AnyIterator {
             defer { index += 1 }
             return index < objects.count ? objects[index] : nil
         }
