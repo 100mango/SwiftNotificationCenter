@@ -102,6 +102,12 @@ CocoaPods:
 pod 'SwiftNotificationCenter'
 ~~~
 
+Carthage:
+
+~~~
+github "100mango/SwiftNotificationCenter"
+~~~
+
 Manually: 
 
 Just copy source files in the SwiftNotificationCenter folder into your project.
