@@ -22,8 +22,9 @@ class SwiftNotificationCenterTests: XCTestCase {
     }
     
 
-    func testNotifyReferenceType() {
+    func testNotify() {
         let object = MockClass()
+        
         NotificationCenter.register(MockProtocol.self, observer: object)
         NotificationCenter.notify(MockProtocol.self) { observer in
             let string = observer.hello()
