@@ -15,10 +15,10 @@ class SecondViewController: UIViewController, UpdateTitle {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.register(UpdateTitle.self, observer: self)
+        NotifyCenter.register(UpdateTitle.self, for: self)
     }
 
-    func updateWithNewTitle(title: String) {
+    func updateWithNewTitle(_ title: String) {
         titleLabel.text = title
     }
 }

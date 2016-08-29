@@ -23,8 +23,8 @@ class SwiftNotificationCenterTests: XCTestCase {
     
     func testNotify() {
         let object = MockClass()
-        NotificationCenter.register(MockProtocol.self, observer: object)
-        NotificationCenter.notify(MockProtocol.self) { observer in
+        NotifyCenter.register(MockProtocol.self, for: object)
+        NotifyCenter.notify(MockProtocol.self) { observer in
             let string = observer.hello()
             XCTAssert(string == "hello")
         }
