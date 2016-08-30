@@ -27,8 +27,6 @@ class FirstViewController: UIViewController, UpdateTitle {
     @IBAction func updateTitle(sender: UIButton) {
         Broadcaster.notify(UpdateTitle.self) {
             $0.updateWithNewTitle(title: self.textField.text ?? "")
-            //$0.updateWithNewTitle(self.textField.text)
-            
         }
     }
     

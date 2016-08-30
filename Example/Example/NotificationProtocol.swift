@@ -41,8 +41,8 @@ class UIKeyboardSystemNotifictionMediator {
         }
     }
     
-    static func register() {
+    static let register: () = {
         NotificationCenter.default.addObserver(mediator, selector: #selector(handleKeyboardNotification(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-    }
+    }()
     
 }

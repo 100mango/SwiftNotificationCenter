@@ -13,12 +13,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
-    private func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
-        UIKeyboardSystemNotifictionMediator.register()
-        
-        return true
+    func applicationDidFinishLaunching(_ application: UIApplication) {
+        UIKeyboardSystemNotifictionMediator.register
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
