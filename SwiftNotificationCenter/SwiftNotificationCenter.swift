@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class NotificationCenter {
+public class Broadcaster {
     
     fileprivate static var observersDic = [String: Any]()
     
@@ -43,7 +43,7 @@ public class NotificationCenter {
     }
 }
 
-private extension NotificationCenter {
+private extension Broadcaster {
     
     static func safeSet(key: String, object: AnyObject) {
         notificationQueue.async(flags: .barrier) {

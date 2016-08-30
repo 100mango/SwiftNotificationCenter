@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SwiftNotificationCenter
 
 protocol UpdateTitle: class {
     
@@ -26,27 +25,24 @@ class UIKeyboardSystemNotifictionMediator {
 
     
     @objc func handleKeyboardNotification(notification: NSNotification) {
-        guard notification.name == UIKeyboardWillShowNotification
+        guard notification.name == NSNotification.Name.UIKeyboardWillShow
             else { return }
         
         guard let beginFrame = (notification
-            .userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
+            .userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
             else { return }
         
         guard let endFrame = (notification
-            .userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue()
+            .userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
             else { return }
         
-        NotificationCenter.notify(UIKeyboardManage.self) {
-            $0.UIKeyboardWillShow(beginFrame, endFrame: endFrame)
+        Broadcaster.notify(UIKeyboardManage.self) {
+            $0.UIKeyboardWillShow(beginFrame: beginFrame, endFrame: endFrame)
         }
     }
     
     static func register() {
-        var onceToken : dispatch_once_t = 0;
-        dispatch_once(&onceToken) {
-            NSNotificationCenter.defaultCenter().addObserver(mediator, selector: #selector(UIKeyboardSystemNotifictionMediator.handleKeyboardNotification(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        }
+        NotificationCenter.default.addObserver(mediator, selector: #selector(handleKeyboardNotification(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
     }
     
 }
