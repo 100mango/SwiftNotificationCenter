@@ -8,61 +8,58 @@
 
 import Foundation
 
-public class NotificationCenter {
+public class Broadcaster {
     
-    private static var observersDic = [String: Any]()
+    fileprivate static var observersDic = [String: Any]()
     
-    private static let notificationQueue = dispatch_queue_create("com.swift.notification.center.dispatch.queue", DISPATCH_QUEUE_CONCURRENT)
+    fileprivate static let notificationQueue = DispatchQueue(label: "com.swift.notification.center.dispatch.queue", attributes: .concurrent)
+
     
-    public static func register<T>(protocolType: T.Type, observer: T) {
-        
-        guard let object = observer as? AnyObject else {
+    public static func register<T>(_ protocolType: T.Type, observer: T) {
+        let key = "\(protocolType)"
+        guard type(of: observer) is AnyClass else {
             fatalError("expecting reference type but found value type: \(observer)")
         }
-        
-        let key = String(protocolType)
-        safeSet(key: key, object: object)
+        safeSet(key: key, object: observer as AnyObject)
     }
     
-    public static func unregister<T>(protocolType: T.Type, observer: T) {
-        if let object = observer as? AnyObject {
-            let key = String(protocolType)
-            safeRemove(key: key, object: object)
-        }
+    public static func unregister<T>(_ protocolType: T.Type, observer: T) {
+        let key = "\(protocolType)"
+        safeRemove(key: key, object: observer as AnyObject)
     }
     
-    public static func notify<T>(protocolType: T.Type, block: (observer: T) -> Void ) {
+    public static func notify<T>(_ protocolType: T.Type, block: (T) -> Void ) {
         
-        let key = String(protocolType)
-        guard let objectSet = safeGetObjectSet(key) else {
+        let key = "\(protocolType)"
+        guard let objectSet = safeGetObjectSet(key: key) else {
             return
         }
         
         for observer in objectSet {
             if let observer = observer as? T {
-                block(observer: observer)
+                block(observer)
             }
         }
     }
 }
 
-private extension NotificationCenter {
+private extension Broadcaster {
     
-    static func safeSet(key key: String, object: AnyObject) {
-        dispatch_barrier_async(notificationQueue) {
+    static func safeSet(key: String, object: AnyObject) {
+        notificationQueue.async(flags: .barrier) {
             if var set = observersDic[key] as? WeakObjectSet<AnyObject> {
-                set.addObject(object)
+                set.add(object)
                 observersDic[key] = set
             }else{
-                observersDic[key] = WeakObjectSet([object])
+                observersDic[key] = WeakObjectSet(object)
             }
         }
     }
     
-    static func safeRemove(key key: String, object: AnyObject) {
-        dispatch_barrier_async(notificationQueue) {
+    static func safeRemove(key: String, object: AnyObject) {
+        notificationQueue.async(flags: .barrier) {
             if var set = observersDic[key] as? WeakObjectSet<AnyObject> {
-                set.removeObject(object)
+                set.remove(object)
                 observersDic[key] = set
             }
         }
@@ -70,7 +67,7 @@ private extension NotificationCenter {
     
     static func safeGetObjectSet(key: String) -> WeakObjectSet<AnyObject>? {
         var objectSet: WeakObjectSet<AnyObject>?
-        dispatch_sync(notificationQueue) {
+        notificationQueue.sync {
             objectSet = observersDic[key] as? WeakObjectSet<AnyObject>
         }
         return objectSet

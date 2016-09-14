@@ -2,7 +2,7 @@
 <p align="center"> <img src="logo.png" />
 <br>
 
-[![](http://img.shields.io/badge/iOS-8.0%2B-blue.svg)]() [![](http://img.shields.io/badge/Swift-2.2-blue.svg)]()
+[![](http://img.shields.io/badge/iOS-8.0%2B-blue.svg)]() [![](http://img.shields.io/badge/Swift-3.0-blue.svg)]()
 
 
 
@@ -43,13 +43,13 @@ let vc = ViewController()
 Register:
 
 ~~~swift
-NotificationCenter.register(Update.self, observer: vc)
+Broadcaster.register(Update.self, observer: vc)
 ~~~
 
 Broadcast:
 
 ~~~swift
-NotificationCenter.notify(Update.self) {
+Broadcaster.notify(Update.self) {
     $0.updateTitle("new title")
 }
 ~~~
@@ -57,7 +57,7 @@ NotificationCenter.notify(Update.self) {
 Unregister:
 
 ~~~swift
-NotificationCenter.unregister(Update.self, observer: self)
+Broadcaster.unregister(Update.self, observer: self)
 ~~~
 
 <br>
@@ -67,16 +67,16 @@ Compare with `NSNotificationCenter` :
 For example, handle `UIKeyboardWillShowNotification`
 
 ~~~swift
-func handleKeyboardNotification(notification: NSNotification) {  
-    guard notification.name == UIKeyboardWillShowNotification 
+@objc func handleKeyboardNotification(notification: NSNotification) {
+    guard notification.name == NSNotification.Name.UIKeyboardWillShow
         else { return }
-
-  	guard let beginFrame = (notification
-        .userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
+    
+    guard let beginFrame = (notification
+        .userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
         else { return }
     
     guard let endFrame = (notification
-        .userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue()
+        .userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
         else { return }
     // use beginFrame, endFrame
 }
@@ -88,7 +88,7 @@ func handleKeyboardNotification(notification: NSNotification) {
 /*
 If you want to observe the system built in notifications like this.
 You can declare a protocol and the relevant method, and use a singleton as a mediator to observe system's notification, then notify our observers.
-Please check the refactor example in SwiftNotificationCenterExample.
+Please check the refactor example in SwiftNotificationCenterExample Project.
 */
 func UIKeyboardWillShow(beginFrame: CGRect, endFrame: CGRect) {
 }

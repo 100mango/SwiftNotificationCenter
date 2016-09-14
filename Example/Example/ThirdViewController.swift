@@ -1,5 +1,5 @@
 //
-//  SecondViewController.swift
+//  ThirdViewController.swift
 //  SwiftNotificationCenterExample
 //
 //  Created by Mango on 16/5/5.
@@ -7,19 +7,17 @@
 //
 
 import UIKit
-import SwiftNotificationCenter
 
-class SecondViewController: UIViewController, UpdateTitle {
-
+class ThirdViewController: UIViewController, UpdateTitle {
+    
     @IBOutlet weak var titleLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.register(UpdateTitle.self, observer: self)
+        Broadcaster.register(UpdateTitle.self, observer: self)
     }
-
+    
     func updateWithNewTitle(title: String) {
         titleLabel.text = title
     }
 }
-

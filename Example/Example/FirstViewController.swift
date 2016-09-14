@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SwiftNotificationCenter
 
 class FirstViewController: UIViewController, UpdateTitle {
 
@@ -17,8 +16,8 @@ class FirstViewController: UIViewController, UpdateTitle {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.register(UpdateTitle.self, observer: self)
-        NotificationCenter.register(UIKeyboardManage.self, observer: self)
+        Broadcaster.register(UpdateTitle.self, observer: self)
+        Broadcaster.register(UIKeyboardManage.self, observer: self)
     }
 
     func updateWithNewTitle(title: String) {
@@ -26,9 +25,8 @@ class FirstViewController: UIViewController, UpdateTitle {
     }
     
     @IBAction func updateTitle(sender: UIButton) {
-        NotificationCenter.notify(UpdateTitle.self) {
-            $0.updateWithNewTitle(self.textField.text ?? "")
-            
+        Broadcaster.notify(UpdateTitle.self) {
+            $0.updateWithNewTitle(title: self.textField.text ?? "")
         }
     }
     

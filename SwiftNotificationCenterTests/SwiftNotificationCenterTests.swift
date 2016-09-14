@@ -21,23 +21,28 @@ class SwiftNotificationCenterTests: XCTestCase {
         super.tearDown()
     }
     
+
     func testNotify() {
         let object = MockClass()
+        
         NotificationCenter.register(MockProtocol.self, observer: object)
         NotificationCenter.notify(MockProtocol.self) { observer in
             let string = observer.hello()
-            XCTAssert(string == "hello")
+            XCTAssertTrue(string == "hello")
         }
     }
-    
 }
 
 protocol MockProtocol {
     func hello() -> String
 }
 
-class MockClass: MockProtocol {
+extension MockProtocol {
     func hello() -> String {
         return "hello"
     }
 }
+
+class MockClass: MockProtocol {
+}
+
