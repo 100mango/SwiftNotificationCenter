@@ -17,9 +17,6 @@ public class Broadcaster {
     
     public static func register<T>(_ protocolType: T.Type, observer: T) {
         let key = "\(protocolType)"
-        guard type(of: observer) is AnyClass else {
-            fatalError("expecting reference type but found value type: \(observer)")
-        }
         safeSet(key: key, object: observer as AnyObject)
     }
     
