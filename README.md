@@ -23,7 +23,7 @@ A Protocol-Oriented NotificationCenter which is type safe, thread safe and with 
 It's simple, safe, lightweight and easy to use for `one-to-many` communication.
 
 
-##Usage
+## Usage
 
 Define protocol and observer:
 
@@ -94,7 +94,7 @@ func UIKeyboardWillShow(beginFrame: CGRect, endFrame: CGRect) {
 }
 ~~~
 
-##Installation
+## Installation
 
 CocoaPods:
 
