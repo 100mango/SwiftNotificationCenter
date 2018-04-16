@@ -28,6 +28,8 @@ It's simple, safe, lightweight and easy to use for `one-to-many` communication.
 Define protocol and observer:
 
 ~~~swift
+import SwiftNotificationCenter
+
 protocol Update {
     func updateTitle(title: String)
 }
