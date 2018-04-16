@@ -41,7 +41,11 @@ struct WeakObjectSet<T: AnyObject>: Sequence {
     }
     
     var allObjects: [T] {
-        return objects.flatMap { $0.object }
+        #if swift(>=4.1)
+            return objects.compactMap { $0.object }
+        #else
+            return objects.flatMap { $0.object }
+        #endif
     }
     
     func contains(_ object: T) -> Bool {
