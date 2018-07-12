@@ -2,7 +2,7 @@
 <p align="center"> <img src="logo.png" />
 <br>
 
-[![](http://img.shields.io/badge/iOS-8.0%2B-blue.svg)]() [![](http://img.shields.io/badge/Swift-3.0-blue.svg)]()
+[![](http://img.shields.io/badge/iOS-8.0%2B-blue.svg)]() [![](http://img.shields.io/badge/Swift-4.0-blue.svg)]()
 
 
 
