@@ -53,11 +53,15 @@ struct WeakObjectSet<T: AnyObject>: Sequence {
     }
     
     mutating func add(_ object: T) {
-        self.objects.formUnion([WeakObject(object)])
+        var obs = self.objects.compactMap{ $0 }
+        obs.append(WeakObject(object))
+        self.objects = Set<WeakObject<T>>(obs)
     }
     
     mutating func add(_ objects: [T]) {
-        self.objects.formUnion(objects.map{WeakObject($0)})
+        var obs = self.objects.compactMap{ $0 }
+        obs.append(contentsOf: objects.compactMap{ WeakObject($0) })
+        self.objects = Set<WeakObject<T>>(obs)
     }
     
     mutating func remove(_ object: T) {
