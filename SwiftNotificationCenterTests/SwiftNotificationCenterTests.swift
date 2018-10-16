@@ -31,6 +31,16 @@ class SwiftNotificationCenterTests: XCTestCase {
             XCTAssertTrue(string == "hello")
         }
     }
+    
+    func testRemove() {
+        let object = MockClass()
+        Broadcaster.register(MockProtocol.self, observer: object)
+        Broadcaster.unregister(MockProtocol.self, observer: object)
+        Broadcaster.notify(MockProtocol.self) { observer in
+            XCTFail()
+        }
+        XCTAssertTrue(true)
+    }
 }
 
 protocol MockProtocol {
