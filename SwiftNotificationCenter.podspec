@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "SwiftNotificationCenter"
-  s.version      = "1.0.5"
+  s.version      = "1.0.4"
   s.summary      = "A Type Safe, Thread Safe, ARC Safe Protocol Oriented NotificationCenter"
   s.homepage     = "https://github.com/100mango/SwiftNotificationCenter"
   s.license  = { :type => 'MIT', :file => 'LICENSE.txt' }
