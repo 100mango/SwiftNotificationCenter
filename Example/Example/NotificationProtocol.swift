@@ -25,15 +25,15 @@ class UIKeyboardSystemNotifictionMediator {
 
     
     @objc func handleKeyboardNotification(notification: NSNotification) {
-        guard notification.name == NSNotification.Name.UIKeyboardWillShow
+        guard notification.name == UIResponder.keyboardWillShowNotification
             else { return }
         
         guard let beginFrame = (notification
-            .userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+            .userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
             else { return }
         
         guard let endFrame = (notification
-            .userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+            .userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
             else { return }
         
         Broadcaster.notify(UIKeyboardManage.self) {
@@ -42,7 +42,7 @@ class UIKeyboardSystemNotifictionMediator {
     }
     
     static let register: () = {
-        NotificationCenter.default.addObserver(mediator, selector: #selector(handleKeyboardNotification(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(mediator, selector: #selector(handleKeyboardNotification(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }()
     
 }
