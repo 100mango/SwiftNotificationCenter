@@ -16,8 +16,8 @@ struct WeakObject<T: AnyObject>: Equatable, Hashable {
         self.identifier = ObjectIdentifier(object)
     }
     
-    var hashValue: Int {
-        return self.identifier.hashValue
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.identifier)
     }
     
     static func == (lhs: WeakObject<T>, rhs: WeakObject<T>) -> Bool {
@@ -42,11 +42,7 @@ struct WeakObjectSet<T: AnyObject>: Sequence {
     }
     
     var allObjects: [T] {
-        #if swift(>=4.1)
-            return objects.compactMap { $0.object }
-        #else
-            return objects.flatMap { $0.object }
-        #endif
+        return objects.compactMap { $0.object }
     }
     
     func contains(_ object: T) -> Bool {
