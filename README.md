@@ -94,23 +94,82 @@ func UIKeyboardWillShow(beginFrame: CGRect, endFrame: CGRect) {
 }
 ~~~
 
+## Delivery and threading
+
+`Broadcaster.notify` runs its callbacks synchronously on the calling thread or
+queue, using a snapshot of the currently live observers. Registration and
+removal are queued behind internal barriers; a subsequent notification observes
+those earlier changes. Callbacks may register, unregister, or issue a nested
+notification without changing the current notification's snapshot.
+
+Use bounded concurrency when many callers notify at once. Submitting an
+unbounded number of blocking callers to a shared Dispatch worker pool can
+exhaust its workers while the internal barrier work is waiting to run. Thread
+safety does not imply a progress guarantee at arbitrary parallelism.
+
 ## Installation
 
-CocoaPods:
+### Swift Package Manager
+
+Add `https://github.com/100mango/SwiftNotificationCenter.git` as a package
+dependency in Xcode, choose version **1.1.0 or later**, and add the
+`SwiftNotificationCenter` product to your target. Version 1.1.0 is the first
+release with Swift Package Manager support; 1.0.5 and earlier do not include
+`Package.swift`.
+
+In another package's `Package.swift`, use:
+
+~~~swift
+dependencies: [
+    .package(
+        url: "https://github.com/100mango/SwiftNotificationCenter.git",
+        from: "1.1.0"
+    )
+],
+targets: [
+    .target(name: "YourTarget", dependencies: ["SwiftNotificationCenter"])
+]
+~~~
+
+Then `import SwiftNotificationCenter` in your Swift files. For local development,
+add the checkout as a local package in Xcode or use
+`.package(path: "../SwiftNotificationCenter")`.
+
+The manifest uses Swift tools 5.0 and Swift 5 language mode, and retains the
+library's declared iOS 8.0 and macOS 10.9 deployment targets. The installed
+Xcode/Swift toolchain may require a newer deployment target. CocoaPods and
+Carthage installation remain unchanged.
+
+### CocoaPods
 
 ~~~
 pod 'SwiftNotificationCenter'
 ~~~
 
-Carthage:
+### Carthage
 
 ~~~
 github "100mango/SwiftNotificationCenter"
 ~~~
 
-Manually: 
+### Manually
 
 Just copy source files in the SwiftNotificationCenter folder into your project.
+
+## Testing
+
+Run the package tests from the repository root with a current Swift toolchain:
+
+~~~sh
+swift build
+swift test
+swift test --configuration release
+~~~
+
+The package builds the library sources directly and reuses the Xcode test
+suite. It does not include the UIKit example application, umbrella header, or
+Xcode Info.plist files. The Foundation-only library can also be tested on Linux;
+Apple-platform builds still require an appropriate Xcode SDK.
 
 
 ## License
