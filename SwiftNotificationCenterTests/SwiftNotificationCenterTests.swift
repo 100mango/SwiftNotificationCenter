@@ -203,6 +203,163 @@ final class SwiftNotificationCenterTests: XCTestCase {
         XCTAssertTrue(Array(objects).isEmpty)
     }
 
+    func testIndividualRemovalPreservesOtherProtocolRegistration() {
+        let object = MockClass()
+        var count = 0
+
+        Broadcaster.register(MockProtocol.self, observer: object)
+        Broadcaster.register(OtherMockProtocol.self, observer: object)
+        Broadcaster.unregister(MockProtocol.self, observer: object)
+        Broadcaster.notify(MockProtocol.self) { _ in
+            XCTFail("Only this protocol registration was removed")
+        }
+        Broadcaster.notify(OtherMockProtocol.self) { observer in
+            XCTAssertTrue(observer === object)
+            count += 1
+        }
+        XCTAssertEqual(count, 1)
+    }
+
+    func testRemovingUnknownObserverIsHarmless() {
+        let registered = MockClass()
+        let unknown = MockClass()
+        var count = 0
+
+        Broadcaster.unregister(OtherMockProtocol.self, observer: unknown)
+        Broadcaster.register(MockProtocol.self, observer: registered)
+        Broadcaster.unregister(MockProtocol.self, observer: unknown)
+        Broadcaster.notify(MockProtocol.self) { observer in
+            XCTAssertTrue((observer as AnyObject) === registered)
+            count += 1
+        }
+        XCTAssertEqual(count, 1)
+    }
+
+    func testRegistrationDuringNotificationAffectsNextSnapshot() {
+        let first = MockClass()
+        let added = MockClass()
+        Broadcaster.register(MockProtocol.self, observer: first)
+
+        withExtendedLifetime([first, added]) {
+            var firstCount = 0
+            Broadcaster.notify(MockProtocol.self) { observer in
+                XCTAssertTrue((observer as AnyObject) === first)
+                firstCount += 1
+                Broadcaster.register(MockProtocol.self, observer: added)
+            }
+            XCTAssertEqual(firstCount, 1)
+
+            var nextObservers = Set<ObjectIdentifier>()
+            Broadcaster.notify(MockProtocol.self) { observer in
+                nextObservers.insert(ObjectIdentifier(observer as AnyObject))
+            }
+            XCTAssertEqual(nextObservers, Set([ObjectIdentifier(first), ObjectIdentifier(added)]))
+        }
+    }
+
+    func testRecursiveNotificationOfSameProtocolDoesNotDeadlock() {
+        let object = MockClass()
+        var outerCount = 0
+        var innerCount = 0
+        Broadcaster.register(MockProtocol.self, observer: object)
+
+        withExtendedLifetime(object) {
+            Broadcaster.notify(MockProtocol.self) { _ in
+                outerCount += 1
+                Broadcaster.notify(MockProtocol.self) { observer in
+                    XCTAssertTrue((observer as AnyObject) === object)
+                    innerCount += 1
+                }
+            }
+        }
+        XCTAssertEqual(outerCount, 1)
+        XCTAssertEqual(innerCount, 1)
+    }
+
+    func testCallbacksRunSynchronouslyOnCallingQueue() {
+        let queue = DispatchQueue(label: "SwiftNotificationCenterTests.caller")
+        let key = DispatchSpecificKey<String>()
+        queue.setSpecific(key: key, value: "caller")
+        let object = MockClass()
+        Broadcaster.register(MockProtocol.self, observer: object)
+
+        withExtendedLifetime(object) {
+            queue.sync {
+                var count = 0
+                Broadcaster.notify(MockProtocol.self) { _ in
+                    XCTAssertEqual(DispatchQueue.getSpecific(key: key), "caller")
+                    count += 1
+                }
+                XCTAssertEqual(count, 1, "notify must finish its callbacks before returning")
+            }
+        }
+    }
+
+    func testReleasedObserverDoesNotPreventDeliveryToLiveObserver() {
+        var released: MockClass? = MockClass()
+        let releasedReference = WeakObject(released!)
+        let live = MockClass()
+        Broadcaster.register(MockProtocol.self, observer: released!)
+        Broadcaster.register(MockProtocol.self, observer: live)
+        Broadcaster.notify(MockProtocol.self) { _ in }
+        released = nil
+
+        XCTAssertNil(releasedReference.object)
+        var count = 0
+        Broadcaster.notify(MockProtocol.self) { observer in
+            XCTAssertTrue((observer as AnyObject) === live)
+            count += 1
+        }
+        XCTAssertEqual(count, 1)
+    }
+
+    func testConcurrentNotificationRegistrationAndRemoval() {
+        let queue = DispatchQueue(label: "SwiftNotificationCenterTests.mixed", attributes: .concurrent)
+        let group = DispatchGroup()
+
+        // Bound the number of blocking GCD callers, but still exercise 100
+        // interleaved register/notify/unregister cycles across four workers.
+        // Unbounded sync callers can exhaust libdispatch's shared worker pool.
+        for _ in 0..<4 {
+            queue.async(group: group) {
+                for _ in 0..<25 {
+                    let object = MockClass()
+                    Broadcaster.register(MockProtocol.self, observer: object)
+                    var receivedSelf = false
+                    Broadcaster.notify(MockProtocol.self) { observer in
+                        XCTAssertEqual(observer.hello(), "hello")
+                        if (observer as AnyObject) === object {
+                            receivedSelf = true
+                        }
+                    }
+                    XCTAssertTrue(receivedSelf)
+                    Broadcaster.unregister(MockProtocol.self, observer: object)
+                }
+            }
+        }
+
+        XCTAssertEqual(group.wait(timeout: .now() + 10), .success)
+        Broadcaster.notify(MockProtocol.self) { _ in
+            XCTFail("Every concurrently registered observer has been removed")
+        }
+    }
+
+    func testWeakObjectSetBulkOperationsKeepCopiesIndependent() {
+        let first = MockClass()
+        let second = MockClass()
+        var objects = WeakObjectSet<MockClass>()
+        XCTAssertTrue(Array(objects).isEmpty)
+        objects.add([first, second, first])
+        var copy = objects
+        copy.remove([first, second])
+
+        withExtendedLifetime([first, second]) {
+            XCTAssertTrue(Array(copy).isEmpty)
+            XCTAssertEqual(Set(objects.map { ObjectIdentifier($0) }),
+                           Set([ObjectIdentifier(first), ObjectIdentifier(second)]))
+        }
+    }
+
     private func removeAllObservers() {
         Broadcaster.unregister(MockProtocol.self)
         Broadcaster.unregister(OtherMockProtocol.self)

@@ -1,6 +1,10 @@
 name: Swift Package Manager
 
 on:
+  push:
+    branches: [master]
+  release:
+    types: [published]
   pull_request:
     branches: [master]
 
@@ -24,3 +28,14 @@ jobs:
         run: swift test --jobs 2
       - name: Test Release configuration
         run: swift test --configuration release --jobs 2
+      - name: Verify public API from an external package
+        if: github.event_name != 'release'
+        env:
+          PACKAGE_PATH: ${{ github.workspace }}
+        run: bash Scripts/verify-swiftpm-consumer.sh 1.1.0
+      - name: Verify released version as an external package
+        if: github.event_name == 'release'
+        env:
+          RELEASE_VERSION: ${{ github.event.release.tag_name }}
+          EXPECTED_REVISION: ${{ github.sha }}
+        run: bash Scripts/verify-swiftpm-consumer.sh "$RELEASE_VERSION"

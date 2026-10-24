@@ -99,22 +99,18 @@ func UIKeyboardWillShow(beginFrame: CGRect, endFrame: CGRect) {
 ### Swift Package Manager
 
 Add `https://github.com/100mango/SwiftNotificationCenter.git` as a package
-dependency in Xcode, then add the `SwiftNotificationCenter` product to your
-target. Select a branch or revision containing `Package.swift`; the existing
-`1.0.5` and earlier tags do not include Swift Package Manager support.
+dependency in Xcode, choose version **1.1.0 or later**, and add the
+`SwiftNotificationCenter` product to your target. Version 1.1.0 is the first
+release with Swift Package Manager support; 1.0.5 and earlier do not include
+`Package.swift`.
 
-This SwiftPM migration has not been merged or released. To use a local
-checkout, add it as a local package in Xcode, or use
-`.package(path: "../SwiftNotificationCenter")` from another local package.
-
-After the `swiftpm-support` branch is published on GitHub, select that branch
-in Xcode. In another package's `Package.swift`, use:
+In another package's `Package.swift`, use:
 
 ~~~swift
 dependencies: [
     .package(
         url: "https://github.com/100mango/SwiftNotificationCenter.git",
-        .branch("swiftpm-support")
+        from: "1.1.0"
     )
 ],
 targets: [
@@ -122,9 +118,9 @@ targets: [
 ]
 ~~~
 
-Then `import SwiftNotificationCenter` in your Swift files. Once a release
-containing `Package.swift` is tagged, prefer a version requirement for that
-release instead of a branch dependency.
+Then `import SwiftNotificationCenter` in your Swift files. For local development,
+add the checkout as a local package in Xcode or use
+`.package(path: "../SwiftNotificationCenter")`.
 
 The manifest uses Swift tools 5.0 and Swift 5 language mode, and retains the
 library's declared iOS 8.0 and macOS 10.9 deployment targets. The installed
@@ -154,6 +150,7 @@ Run the package tests from the repository root with a current Swift toolchain:
 ~~~sh
 swift build
 swift test
+swift test --configuration release
 ~~~
 
 The package builds the library sources directly and reuses the Xcode test
