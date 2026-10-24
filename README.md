@@ -94,6 +94,19 @@ func UIKeyboardWillShow(beginFrame: CGRect, endFrame: CGRect) {
 }
 ~~~
 
+## Delivery and threading
+
+`Broadcaster.notify` runs its callbacks synchronously on the calling thread or
+queue, using a snapshot of the currently live observers. Registration and
+removal are queued behind internal barriers; a subsequent notification observes
+those earlier changes. Callbacks may register, unregister, or issue a nested
+notification without changing the current notification's snapshot.
+
+Use bounded concurrency when many callers notify at once. Submitting an
+unbounded number of blocking callers to a shared Dispatch worker pool can
+exhaust its workers while the internal barrier work is waiting to run. Thread
+safety does not imply a progress guarantee at arbitrary parallelism.
+
 ## Installation
 
 ### Swift Package Manager
