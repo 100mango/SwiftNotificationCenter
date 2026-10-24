@@ -96,21 +96,70 @@ func UIKeyboardWillShow(beginFrame: CGRect, endFrame: CGRect) {
 
 ## Installation
 
-CocoaPods:
+### Swift Package Manager
+
+Add `https://github.com/100mango/SwiftNotificationCenter.git` as a package
+dependency in Xcode, then add the `SwiftNotificationCenter` product to your
+target. Select a branch or revision containing `Package.swift`; the existing
+`1.0.5` and earlier tags do not include Swift Package Manager support.
+
+This SwiftPM migration has not been merged or released. To use a local
+checkout, add it as a local package in Xcode, or use
+`.package(path: "../SwiftNotificationCenter")` from another local package.
+
+After the `swiftpm-support` branch is published on GitHub, select that branch
+in Xcode. In another package's `Package.swift`, use:
+
+~~~swift
+dependencies: [
+    .package(
+        url: "https://github.com/100mango/SwiftNotificationCenter.git",
+        .branch("swiftpm-support")
+    )
+],
+targets: [
+    .target(name: "YourTarget", dependencies: ["SwiftNotificationCenter"])
+]
+~~~
+
+Then `import SwiftNotificationCenter` in your Swift files. Once a release
+containing `Package.swift` is tagged, prefer a version requirement for that
+release instead of a branch dependency.
+
+The manifest uses Swift tools 5.0 and Swift 5 language mode, and retains the
+library's declared iOS 8.0 and macOS 10.9 deployment targets. The installed
+Xcode/Swift toolchain may require a newer deployment target. CocoaPods and
+Carthage installation remain unchanged.
+
+### CocoaPods
 
 ~~~
 pod 'SwiftNotificationCenter'
 ~~~
 
-Carthage:
+### Carthage
 
 ~~~
 github "100mango/SwiftNotificationCenter"
 ~~~
 
-Manually: 
+### Manually
 
 Just copy source files in the SwiftNotificationCenter folder into your project.
+
+## Testing
+
+Run the package tests from the repository root with a current Swift toolchain:
+
+~~~sh
+swift build
+swift test
+~~~
+
+The package builds the library sources directly and reuses the Xcode test
+suite. It does not include the UIKit example application, umbrella header, or
+Xcode Info.plist files. The Foundation-only library can also be tested on Linux;
+Apple-platform builds still require an appropriate Xcode SDK.
 
 
 ## License

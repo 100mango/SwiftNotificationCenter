@@ -1,0 +1,26 @@
+name: Swift Package Manager
+
+on:
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: macOS Debug and Release
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Show Swift version
+        run: swift --version
+      - name: Validate package manifest
+        run: swift package dump-package
+      - name: Test Debug configuration
+        run: swift test --jobs 2
+      - name: Test Release configuration
+        run: swift test --configuration release --jobs 2
